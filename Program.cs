@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace CourseWork;
 
@@ -47,7 +46,7 @@ internal class Program
 
         public void SaveData()
         {
-            File.WriteAllText("storage.json", JsonConvert.SerializeObject(_storage));
+            File.WriteAllText("storage.json", JsonConvert.SerializeObject(_storage, Formatting.Indented));
         }
         public void AddPerson()
         {
