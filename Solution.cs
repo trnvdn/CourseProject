@@ -2,8 +2,7 @@
 using Newtonsoft.Json;
 namespace CourseWork;
 
-public class Solution
-{
+public class Solution{
     private readonly Storage? _storage = File.Exists("storage.json") ? JsonConvert.DeserializeObject<Storage>(File.ReadAllText("storage.json")) : new Storage();
         private readonly Person? _person = new Person();
 
@@ -14,7 +13,7 @@ public class Solution
             "МОЛОДШИЙ ЛЕЙТИНАНТ", "ЛЕЙТИНАНТ", "СТАРШИЙ ЛЕЙТИНАНТ", "КАПІТАН", "МАЙОР", "ПІДПОЛКОВНИК", "ПОЛКОВНИК",
             "БРИГАДНИЙ ГЕНЕРАЛ", "ГЕНЕРАЛ МАЙОР", "ГЕНЕРАЛ ЛЕЙТИНАНТ", "ГЕНЕРАЛ"
         };
-        private void SaveData()
+        public void SaveData()
         {
             File.WriteAllText("storage.json", JsonConvert.SerializeObject(_storage, Formatting.Indented));
         }
@@ -57,12 +56,11 @@ public class Solution
             Console.WriteLine("Введіть період служби");
             _person.Period = StringValidation();
             Console.WriteLine("Вкажіть характеристику");
-            _person.AboutSoldier = Console.ReadLine();
-
-                Random rnd = new Random();
-            _person.Id = "UA" + "-" + string.Join("",_person.Rank.Select(x=>x.ToString().ToUpper()).ToArray())+ "-" + _person.Surname[0] + _person.Name[0] + "-" + rnd.Next(100000,250000);
+            _person.AboutSoldier = Console.ReadLine(); 
+            Random rnd = new Random();
+            _person.IdNum = rnd.Next(100000,250000);
+            _person.Id = "UA" + "-" + string.Join("",_person.Rank.Select(x=>x.ToString().ToUpper()).ToArray())+ "-" + _person.Surname[0] + _person.Name[0] + "-" + _person.IdNum;
             _storage.list.Add(_person);
-            SaveData();
         }
 
         public void GetDetailedInfo()
@@ -71,9 +69,8 @@ public class Solution
             {
                 Console.WriteLine();
                 
-                Console.WriteLine("Введіть ID-номер військовослужбовця");
-                string lineId = StringValidation();
-                var p = PersonById(lineId);
+                Console.WriteLine("Введіть останні цифри з  ID-номеру військовослужбовця");
+                var p = PersonById(IntValidation());
                 if (p != null)
                 {
                     string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
@@ -82,9 +79,9 @@ public class Solution
             }
         }
 
-        private Person PersonById(string lineId)
+        private Person PersonById(int lineId)
         {
-            var person = _storage.list.Where(x => x.Id == lineId.ToUpper()).ToList();
+            var person = _storage.list.Where(x => x.IdNum == lineId).ToList();
             if (person.Count > 0)
             {
                 return person[0];
@@ -142,15 +139,13 @@ public class Solution
         {
             if (_storage.list.Count != 0)
             {
-                Console.WriteLine("Введіть ID-номер військовослужбовця для його видалення з реєстру:");
+                Console.WriteLine("Введіть останні цифри з ID-номеру військовослужбовця для його видалення з реєстру:");
                 PrintID();
-                string lineId = StringValidation();
-                var p = PersonById(lineId);
+                var p = PersonById(IntValidation());
                 if (p != null)
                 {
                     int position = Array.IndexOf(_storage.list.ToArray(), p);
                     _storage.list.RemoveAt(position);
-                    SaveData();
                     PrintAll();
                 }
             }
@@ -203,7 +198,7 @@ public class Solution
             else
             {
                 Console.WriteLine();
-                Console.WriteLine("Зараз немає наявної інформації!");
+                Console.WriteLine("Ваш список військовослужбовців пустий");
                 Console.WriteLine();
             }
         }
@@ -259,6 +254,7 @@ public class Solution
             public string Period { get; set; }
             public string FormOfService { get; set; }
             public string AboutSoldier { get; set; }
+            public int IdNum { get; set; }
 
         }
         private class Storage

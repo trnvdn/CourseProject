@@ -1,0 +1,35 @@
+﻿# Compiled Object files
+*.sln.bin
+*.dll
+*.exe
+*.pdb
+*.obj
+*.so
+*.dylib
+*.dll.a
+*.o
+*.lib
+
+# Cache and log files
+*.user
+*.suo
+*.cache
+*.log
+
+# Visual Studio files
+.vs
+*.vscode
+*.csproj.user
+*.sln.docstates
+*.userprefs
+
+# NuGet packages
+packages/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+bin/
+obj/
