@@ -1,19 +1,15 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace CourseWork;
+﻿namespace CourseWork;
 
 internal class Program
 {
     static void Main(string[] args)
     {
-        
-        //Fixing problems with output&input "і ї"
         Console.InputEncoding = System.Text.Encoding.Unicode;
         Console.OutputEncoding = System.Text.Encoding.Unicode;
 
         Solution solution = new Solution();
-        Console.CancelKeyPress += new ConsoleCancelEventHandler(OnConsoleClosing);
-
+        Console.CancelKeyPress += OnConsoleClosing;
+        
         bool appContext = true;
 
         
