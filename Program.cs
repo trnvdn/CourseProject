@@ -11,15 +11,14 @@ internal class Program
         Console.OutputEncoding = System.Text.Encoding.Unicode;
 
         Solution solution = new Solution();
-        Console.CancelKeyPress += OnConsoleClosing;
-        
+
         bool appContext = true;
 
         
         while (appContext)
         {
             Console.WriteLine(
-                "Введіть код операції:\n1. Додати людину\n2. Видалити людину\n3. Вивести список особистого складу\n4. Вивести сортований список особистого складу\n5. Отримати детальну інформацію про військовослужбовця\n6. Пошук за батальйоном \n7. Редагувати дані про військовослужбовця\n8. Вийти");
+                "Введіть код операції:\n1. Додати людину\n2. Видалити людину\n3. Вивести список особистого складу\n4. Вивести відсортований список\n5. Отримати детальну інформацію про військовослужбовця\n6. Пошук за критеріями\n7. Редагувати дані про військовослужбовця\n8. Вийти");
             switch (Console.ReadLine())
             {
                 case "1":
@@ -36,14 +35,15 @@ internal class Program
                     break;
                 case "4":
                     Console.Clear();
-                    solution.SortBy();
+                    solution.SortByBrigade();
                     break;
                 case "5":
                     Console.Clear();
                     solution.GetDetailedInfo();
                     break;
                 case "6":
-                    
+                    Console.Clear();
+                    solution.SearchBy();
                     break;
                 case "7":
                     Console.Clear();
@@ -57,10 +57,6 @@ internal class Program
                     Console.WriteLine("Такої команди не було створено");
                     break;
             }
-        }
-        void OnConsoleClosing(object sender, ConsoleCancelEventArgs e)
-        {
-            solution.SaveData();
         }
     }
 }

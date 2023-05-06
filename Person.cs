@@ -17,7 +17,7 @@ public class Person
     public string Position { get; set; }
     public int Unit { get; set; }
     public int Battalion { get; set; }
-    public string Brigade { get; set; }
+    public int Brigade { get; set; }
     public string Period { get; set; }
     public string FormOfService { get; set; }
     public string AboutSoldier { get; set; }
