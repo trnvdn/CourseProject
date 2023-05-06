@@ -1,4 +1,5 @@
-﻿namespace CourseWork;
+﻿using System.Collections.Generic;
+namespace CourseWork;
 
 public class Storage
 {

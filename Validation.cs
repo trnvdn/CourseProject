@@ -1,11 +1,16 @@
-﻿using System.Reflection.Metadata.Ecma335;
+﻿using System;
+using System.Linq;
 
 namespace CourseWork;
 
-public static class ValidationHandler
+public static class Validation
 {
-    public static string StringValidation()
+    public static string VerifyString(string? caption = null)
     {
+        if (caption != null)
+        {
+            Console.WriteLine($"Введіть {caption}");
+        }
         string? str = Console.ReadLine();
         while (string.IsNullOrEmpty(str) || string.IsNullOrWhiteSpace(str))
         {
@@ -14,19 +19,27 @@ public static class ValidationHandler
         }
         return str.ToUpper();
     }
-    public static string VerifyRank()
+    public static string VerifyRank(string? caption = null)
     {
-        string str = StringValidation();
+        if (caption != null)
+        {
+            Console.WriteLine($"Введіть звання");
+        }
+        string str = VerifyString();
         while (!RankArr.Contains(str))
         {
             Console.WriteLine("Невірне звання!");
-            str = StringValidation();
+            str = VerifyString();
         }
 
         return str;
     }
-    public static int IntValidation()
+    public static int VerifyInt(string? caption = null)
     {
+        if (caption != null)
+        {
+            Console.WriteLine($"Введіть {caption}");
+        }
         int num;
         while (!int.TryParse(Console.ReadLine(),out num))
         {
@@ -34,8 +47,7 @@ public static class ValidationHandler
         }
         return num;
     }
-    private static string[] RankArr = 
-    {
+    private static string[] RankArr = new[] {
         "РЕКРУТ", "СОЛДАТ", "СТАРШИЙ СОЛДАТ", "МОЛОДШИЙ СЕРЖАНТ", "СЕРЖАНТ", "СТАРШИЙ СЕРЖАНТ", "ГОЛОВНИЙ СЕРЖАНТ",
         "ШТАБ-СЕРЖАНТ", "МАЙСТЕР СЕРЖАНТ", "СТАРШИЙ МАЙСТЕР СЕРЖАНТ", "ГОЛОВНИЙ МАЙСТЕР СЕРЖАНТ",
         "МОЛОДШИЙ ЛЕЙТИНАНТ", "ЛЕЙТИНАНТ", "СТАРШИЙ ЛЕЙТИНАНТ", "КАПІТАН", "МАЙОР", "ПІДПОЛКОВНИК", "ПОЛКОВНИК",

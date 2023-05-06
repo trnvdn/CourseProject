@@ -1,4 +1,7 @@
-﻿namespace CourseWork;
+﻿using System;
+using System.Collections.Specialized;
+
+namespace CourseWork;
 
 internal class Program
 {
@@ -16,7 +19,7 @@ internal class Program
         while (appContext)
         {
             Console.WriteLine(
-                "Введіть код операції:\n1. Додати людину\n2. Видалити людину\n3. Вивести список особистого складу\n4. Вивести сортований список особистого складу\n5. Отримати детальну інформацію про військовослужбовця\n6. Вийти");
+                "Введіть код операції:\n1. Додати людину\n2. Видалити людину\n3. Вивести список особистого складу\n4. Вивести сортований список особистого складу\n5. Отримати детальну інформацію про військовослужбовця\n6. Пошук за батальйоном \n7. Редагувати дані про військовослужбовця\n8. Вийти");
             switch (Console.ReadLine())
             {
                 case "1":
@@ -40,6 +43,13 @@ internal class Program
                     solution.GetDetailedInfo();
                     break;
                 case "6":
+                    
+                    break;
+                case "7":
+                    Console.Clear();
+                    solution.Refactsoldier();
+                    break;
+                case "8":
                     solution.SaveData();
                     appContext = false;
                     break;
