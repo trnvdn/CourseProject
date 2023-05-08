@@ -39,11 +39,25 @@ public class Solution
         _person.Brigade = Validation.VerifyInt("номер бригади");
         _person.Period = Validation.VerifyString("період служби");
         _person.AboutSoldier = Validation.VerifyString("характеристику");
-        Console.WriteLine("Дані введені вірно?");
-        if(Console.ReadLine().ToLower() == "ні")
+        bool IsInputCorrect = false;
+        while (IsInputCorrect == false)
         {
-            AddPerson();
-            return;
+            
+            Console.WriteLine("Дані введені вірно?");
+            Console.WriteLine("1.Так\n2.Ні\n");
+            switch (Validation.VerifyInt())
+            {
+                case 1:
+                    IsInputCorrect = true;
+                    break;
+                case 2:
+                    IsInputCorrect = true;
+                    AddPerson();
+                    return;
+                default:
+                    Console.WriteLine("Такої відповіді немає");
+                    return;
+            }
         }
         Random rnd = new Random();
         _person.IdNum = rnd.Next(100000, 250000);
@@ -68,11 +82,11 @@ public class Solution
                 while (InProcess)
                 {
                     Console.WriteLine("Введіть поле яке треба змінити");
-                    Console.WriteLine("1.Ім'я \n2.Прізвище \n3.Вік \n4.звання \n5.дату отримання звання \n6.форму служби \n7.ім'я та" 
-                                      + " прізвище матері \n8.адресу проживання матері \n9.ім'я та прізвище батька \n"+
-                                      " 10.адресу проживання батька \n11.цивільну професію військовослужбовця \n"+
-                                      "12.заклад освіти \n13. позиція \n14. номер роти \n15.номер батальйону \n"+
-                                      "16.назву бригади \n17.період служби \n18.характеристика\n");
+                    Console.WriteLine("1.Ім'я \n2.Прізвище \n3.Вік \n4.Звання \n5.Дата отримання звання \n6.Форма служби \n7.Ім'я та" 
+                                      + " прізвище матері \n8.Адреса проживання матері \n9.Ім'я та прізвище батька \n"+
+                                      " 10.Адреса проживання батька \n11.Цивільна професія військовослужбовця\n"+
+                                      "12.Заклад освіти \n13.Позиція \n14.Номер роти\n15.Номер батальйону\n"+
+                                      "16.Номер бригади\n17.Період служби\n18.Характеристика\n19.Завершити редагування");
                     switch (Validation.VerifyInt())
                     {
                         case 1:
@@ -156,7 +170,7 @@ public class Solution
             {
                 string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
                 Console.WriteLine(
-                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nФорма служби: {p.FormOfService}\nТермін служби: {p.Period}\nДата отримання звання: {p.DateRank}\nID:{p.Id}\nПозиція: {p.Position}\nОсвіта: {p.Education}\n\nХарактеристика: {p.AboutSoldier}\n\nІм'я та прізвище батька - {p.fNameSurname}\nМісце проживання - {p.fAdress}\nІм'я та прізвище матері - {p.mNameSurname}\nМісце проживання - {p.mAdress}\nЦивільна професія - {p.civilProfession}\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade}");
+                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nФорма служби: {p.FormOfService}\nТермін служби: {p.Period}\nДата отримання звання: {p.DateRank}\nID:{p.Id}\nПозиція: {p.Position}\nОсвіта: {p.Education}\n\nХарактеристика: {p.AboutSoldier}\n\nІм'я та прізвище батька - {p.fNameSurname}\nМісце проживання - {p.fAdress}\nІм'я та прізвище матері - {p.mNameSurname}\nМісце проживання - {p.mAdress}\nЦивільна професія - {p.civilProfession}\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригадм");
             }
         }
     }
@@ -202,7 +216,7 @@ public class Solution
                 Console.WriteLine();
                 Console.WriteLine("————————————————————————————————————");
                 Console.WriteLine(
-                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nID:{p.Id}\nПозиція: {p.Position}\n\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade}");
+                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nID:{p.Id}\nПозиція: {p.Position}\n\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригади");
                 Console.WriteLine("————————————————————————————————————");
                 Console.WriteLine();
             }
@@ -300,7 +314,7 @@ public class Solution
                 Console.WriteLine();
                 Console.WriteLine("————————————————————————————————————");
                 Console.WriteLine(
-                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nID:{p.Id}\nПозиція: {p.Position}\n\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade}");
+                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nID:{p.Id}\nПозиція: {p.Position}\n\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригади");
                 Console.WriteLine("————————————————————————————————————");
                 Console.WriteLine();
             }
@@ -318,45 +332,67 @@ public class Solution
 
     private void SaveToFile(List<Person> persons)
     {
-        Console.WriteLine("Чи бажаєте зберігти список у файл?");
-        if (Validation.VerifyString().ToLower() == "ні")
+        bool IsInputCorrect = false;
+        while (IsInputCorrect == false)
         {
-            return;
+            
+            Console.WriteLine("Чи бажаєте зберігти список у файл?");
+            Console.WriteLine("1.Так\n2.Ні\n");
+            switch (Validation.VerifyInt())
+            {
+                case 1:
+                    IsInputCorrect = true;
+                    break;
+                case 2:
+                    IsInputCorrect = true;
+                    return;
+                default:
+                    Console.WriteLine("Такої відповіді немає");
+                    return;
+            }
         }
         if (persons.Count == 0)
         {
             return;
         }
+        Console.Clear();
         string document = "";
-        bool isFull;
-        Console.WriteLine("1. Коротка відомість\n2. Повна відомість");
-        switch (Validation.VerifyInt())
+        bool? isFull = null;
+        while (isFull == null)
         {
-            case 1:
-                isFull = false;
-                break;
-            case 2:
-                isFull = true;
-                break;
-            default:
-                return;
+            Console.WriteLine("1. Коротка відомість\n2. Повна відомість");
+            switch (Validation.VerifyInt())
+            {
+                case 1:
+                    isFull = false;
+                    break;
+                case 2:
+                    isFull = true;
+                    break;
+                default:
+                    Console.WriteLine("Такої відповіді немає");
+                    break;
+            }
         }
         foreach (var p in persons)
         {
             string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
 
-            if(isFull)
+            if(isFull == true)
             {
+                document += "--------------------------------------------------------------------------------------"; 
                document += $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nФорма служби: {p.FormOfService}\n" +
                            $"Термін служби: {p.Period}\nДата отримання звання: {p.DateRank}\nID:{p.Id}\nПозиція: " +
                            $"{p.Position}\nОсвіта: {p.Education}\n\nХарактеристика: {p.AboutSoldier}\n\nІм'я та " +
                            $"прізвище батька - {p.fNameSurname}\nМісце проживання - {p.fAdress}\nІм'я та прізвище матері" +
                            $" - {p.mNameSurname}\nМісце проживання - {p.mAdress}\nЦивільна професія - {p.civilProfession}" +
-                           $"\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade}\n\n\n";
+                           $"\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригади\n\n\n";
+               document += "--------------------------------------------------------------------------------------"; 
+
             }
             else
             {
-                document += $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nID:{p.Id}\nПозиція: {p.Position}\n\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade}\n\n\n";
+                document += $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nID:{p.Id}\nПозиція: {p.Position}\n\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригади\n\n\n";
             }
         }
         string name = Validation.VerifyString("назву для файла");
