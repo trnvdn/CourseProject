@@ -256,7 +256,7 @@ public class Solution
     public void SortByBrigade()
     {
         var tempStorage = _storage.list;
-        SortedPrint(tempStorage.OrderBy(x => x.Battalion).ThenBy(x=>x.Unit).ToList());
+        SortedPrint(tempStorage.OrderBy(x => x.Brigade).ThenBy(x=>x.Battalion).ThenBy(x=>x.Unit).ToList());
         SaveToFile(_storage.list);
     }
 
