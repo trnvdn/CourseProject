@@ -18,38 +18,52 @@ internal class Program
         while (appContext)
         {
             Console.WriteLine(
-                "Введіть код операції:\n1. Додати людину\n2. Видалити людину\n3. Вивести список особистого складу\n4. Вивести відсортований список\n5. Отримати детальну інформацію про військовослужбовця\n6. Пошук за критеріями\n7. Редагувати дані про військовослужбовця\n8. Вийти");
-            switch (Console.ReadLine())
+                );
+            switch (Validation.VerifyInt(
+                        "Введіть код операції:\n" +
+                        "1. Додати людину\n" +
+                        "2. Видалити людину\n" +
+                        "3. Вивести список особистого складу\n" + 
+                        "4. Вивести відсортований список\n" +
+                        "5. Отримати детальну інформацію про військовослужбовця\n" +
+                        "6. Пошук за критеріями\n" +
+                        "7. Редагувати дані про військовослужбовця\n" +
+                        "8. Створити та зберігти звіт\n" +
+                        "9. Вийти"))
             {
-                case "1":
+                case 1:
                     Console.Clear();
                     solution.AddPerson();
                     break;
-                case "2":
+                case 2:
                     Console.Clear();
                     solution.DeleteAt();
                     break;
-                case "3":
+                case 3:
                     Console.Clear();
                     solution.PrintAll();
                     break;
-                case "4":
+                case 4:
                     Console.Clear();
                     solution.SortByBrigade();
                     break;
-                case "5":
+                case 5:
                     Console.Clear();
                     solution.GetDetailedInfo();
                     break;
-                case "6":
+                case 6:
                     Console.Clear();
                     solution.SearchBy();
                     break;
-                case "7":
+                case 7:
                     Console.Clear();
                     solution.Refactsoldier();
                     break;
-                case "8":
+                case 8:
+                    Console.Clear();
+                    solution.NewReport();
+                    break;
+                case 9:
                     solution.SaveData();
                     appContext = false;
                     break;

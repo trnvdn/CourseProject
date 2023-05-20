@@ -5,6 +5,17 @@ namespace CourseWork;
 
 public static class Validation
 {
+    static Validation()
+    {
+        _rankArr = new[] {
+            "РЕКРУТ", "СОЛДАТ", "СТАРШИЙ СОЛДАТ", "МОЛОДШИЙ СЕРЖАНТ", "СЕРЖАНТ", "СТАРШИЙ СЕРЖАНТ", "ГОЛОВНИЙ СЕРЖАНТ",
+            "ШТАБ-СЕРЖАНТ", "МАЙСТЕР СЕРЖАНТ", "СТАРШИЙ МАЙСТЕР СЕРЖАНТ", "ГОЛОВНИЙ МАЙСТЕР СЕРЖАНТ",
+            "МОЛОДШИЙ ЛЕЙТИНАНТ", "ЛЕЙТИНАНТ", "СТАРШИЙ ЛЕЙТИНАНТ", "КАПІТАН", "МАЙОР", "ПІДПОЛКОВНИК", "ПОЛКОВНИК",
+            "БРИГАДНИЙ ГЕНЕРАЛ", "ГЕНЕРАЛ МАЙОР", "ГЕНЕРАЛ ЛЕЙТИНАНТ", "ГЕНЕРАЛ"
+        };
+    }
+    private static string[] _rankArr;
+
     public static string VerifyString(string? caption = null)
     {
         if (caption != null)
@@ -26,7 +37,7 @@ public static class Validation
             Console.WriteLine($"Введіть звання");
         }
         string str = VerifyString();
-        while (!RankArr.Contains(str))
+        while (!_rankArr.Contains(str))
         {
             Console.WriteLine("Невірне звання!");
             str = VerifyString();
@@ -47,12 +58,5 @@ public static class Validation
         }
         return num;
     }
-    private static string[] RankArr = new[] {
-        "РЕКРУТ", "СОЛДАТ", "СТАРШИЙ СОЛДАТ", "МОЛОДШИЙ СЕРЖАНТ", "СЕРЖАНТ", "СТАРШИЙ СЕРЖАНТ", "ГОЛОВНИЙ СЕРЖАНТ",
-        "ШТАБ-СЕРЖАНТ", "МАЙСТЕР СЕРЖАНТ", "СТАРШИЙ МАЙСТЕР СЕРЖАНТ", "ГОЛОВНИЙ МАЙСТЕР СЕРЖАНТ",
-        "МОЛОДШИЙ ЛЕЙТИНАНТ", "ЛЕЙТИНАНТ", "СТАРШИЙ ЛЕЙТИНАНТ", "КАПІТАН", "МАЙОР", "ПІДПОЛКОВНИК", "ПОЛКОВНИК",
-        "БРИГАДНИЙ ГЕНЕРАЛ", "ГЕНЕРАЛ МАЙОР", "ГЕНЕРАЛ ЛЕЙТИНАНТ", "ГЕНЕРАЛ"
-    };
-
-    public static string[] GetRankArr() => RankArr;
+    public static string[] GetRankArr() => _rankArr;
 }

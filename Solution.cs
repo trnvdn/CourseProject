@@ -39,105 +39,120 @@ public class Solution
         _person.Brigade = Validation.VerifyInt("номер бригади");
         _person.Period = Validation.VerifyString("період служби");
         _person.AboutSoldier = Validation.VerifyString("характеристику");
-        Console.WriteLine("Дані введені вірно?");
-        Console.WriteLine("1.Так\n2.Ні\n");
-        switch (Validation.VerifyInt())
+        while (true)
         {
-            case 1:
-                Random rnd = new Random();
-                _person.IdNum = rnd.Next(100000, 250000);
-                _person.Id = "UA" + "-" + string.Join("", _person.Rank.Select(x => x.ToString().ToUpper()).ToArray()) + "-" +
-                             _person.Surname[0] + _person.Name[0] + "-" + _person.IdNum;
-                _storage.list.Add(_person);
-                SaveData();
-                break;
-            case 2:
-                AddPerson();
-                return;
-            default:
-                Console.WriteLine("Такої відповіді немає");
-                return;
+            Console.WriteLine("Дані введені вірно?");
+            switch (Validation.VerifyInt(":\n1.Так\n2.Ні\n"))
+            {
+                case 1:
+                    _storage.list.Add(generateID(_person));
+                    SaveData();
+                    return;
+                case 2:
+                    AddPerson();
+                    return;
+                default:
+                    Console.WriteLine("Такої відповіді немає");
+                    break;
+            }
         }
-
-        
     }
 
+    private Person generateID(Person person)
+    {
+        Random rnd = new Random();
+        person.IdNum = rnd.Next(100000, 250000);
+        person.Id = "UA" + "-" + string.Join("", person.Rank.Select(x => x.ToString().ToUpper()).ToArray()) + "-" +
+                    person.Surname[0] + person.Name[0] + "-" + person.IdNum;
+        return person;
+    }
+    
     public void Refactsoldier()
     {
-        if (MayPrintId())
+        if (isListNotEmpty())
         {
             Console.WriteLine();
 
-            Console.WriteLine("Введіть останні цифри з  ID-номеру військовослужбовця");
-            var p = PersonById(Validation.VerifyInt());
-            if (p != null)
+            var person = personById(Validation.VerifyInt("останні цифри з  ID-номеру військовослужбовця")).FirstOrDefault();
+            if (person != null)
             {
-                _storage.list.RemoveAt(_storage.list.IndexOf(p));
+                _storage.list.RemoveAt(_storage.list.IndexOf(person));
                 bool InProcess = true;
                 while (InProcess)
                 {
-                    Console.WriteLine("Введіть поле яке треба змінити");
-                    Console.WriteLine(
-                        "1.Ім'я \n2.Прізвище \n3.Вік \n4.Звання \n5.Дата отримання звання \n6.Форма служби \n7.Ім'я та"
-                        + " прізвище матері \n8.Адреса проживання матері \n9.Ім'я та прізвище батька \n" +
-                        " 10.Адреса проживання батька \n11.Цивільна професія військовослужбовця\n" +
-                        "12.Заклад освіти \n13.Позиція \n14.Номер роти\n15.Номер батальйону\n" +
-                        "16.Номер бригади\n17.Період служби\n18.Характеристика\n19.Завершити редагування");
-                    switch (Validation.VerifyInt())
+                    switch (Validation.VerifyInt("поле яке треба змінити\n" + "1.Ім'я\n" +
+                                                 "2.Прізвище\n"+
+                                                 "3.Вік \n"+
+                                                 "4.Звання\n" +
+                                                 "5.Дата отримання звання\n" +
+                                                 "6.Форма служби\n" +
+                                                 "7.Ім'я та прізвище матері\n" +
+                                                 "8.Адреса проживання матері\n" +
+                                                 "9.Ім'я та прізвище батька\n" +
+                                                 "10.Адреса проживання батька\n" +
+                                                 "11.Цивільна професія військовослужбовця\n" +
+                                                 "12.Заклад освіти\n" +
+                                                 "13.Позиція\n" +
+                                                 "14.Номер роти\n" +
+                                                 "15.Номер батальйону\n" +
+                                                 "16.Номер бригади\n" +
+                                                 "17.Період служби\n" +
+                                                 "18.Характеристика\n" +
+                                                 "19.Завершити редагування"))
                     {
                         case 1:
-                            p.Name = Validation.VerifyString("ім'я");
+                            person.Name = Validation.VerifyString("ім'я");
                             break;
                         case 2:
-                            p.Surname = Validation.VerifyString("прізвище");
+                            person.Surname = Validation.VerifyString("прізвище");
                             break;
                         case 3:
-                            p.Age = Validation.VerifyInt("вік");
+                            person.Age = Validation.VerifyInt("вік");
                             break;
                         case 4:
-                            p.Rank = Validation.VerifyRank("звання");
+                            person.Rank = Validation.VerifyRank("звання");
                             break;
                         case 5:
-                            p.DateRank = Validation.VerifyString(" дату отримання звання");
+                            person.DateRank = Validation.VerifyString(" дату отримання звання");
                             break;
                         case 6:
-                            p.FormOfService = Validation.VerifyString("форму служби");
+                            person.FormOfService = Validation.VerifyString("форму служби");
                             break;
                         case 7:
-                            p.mNameSurname = Validation.VerifyString("ім'я та прізвище матері");
+                            person.mNameSurname = Validation.VerifyString("ім'я та прізвище матері");
                             break;
                         case 8:
-                            p.mAdress = Validation.VerifyString("адресу проживання матері");
+                            person.mAdress = Validation.VerifyString("адресу проживання матері");
                             break;
                         case 9:
-                            p.fNameSurname = Validation.VerifyString("ім'я та прізвище батька");
+                            person.fNameSurname = Validation.VerifyString("ім'я та прізвище батька");
                             break;
                         case 10:
-                            p.fAdress = Validation.VerifyString("адресу проживання батька");
+                            person.fAdress = Validation.VerifyString("адресу проживання батька");
                             break;
                         case 11:
-                            p.civilProfession = Validation.VerifyString("цивільну професію військовослужбовця");
+                            person.civilProfession = Validation.VerifyString("цивільну професію військовослужбовця");
                             break;
                         case 12:
-                            p.Education = Validation.VerifyString("заклад освіти");
+                            person.Education = Validation.VerifyString("заклад освіти");
                             break;
                         case 13:
-                            p.Position = Validation.VerifyString("позицію");
+                            person.Position = Validation.VerifyString("позицію");
                             break;
                         case 14:
-                            p.Unit = Validation.VerifyInt("номер роти");
+                            person.Unit = Validation.VerifyInt("номер роти");
                             break;
                         case 15:
-                            p.Battalion = Validation.VerifyInt("номер батальйону");
+                            person.Battalion = Validation.VerifyInt("номер батальйону");
                             break;
                         case 16:
-                            p.Brigade = Validation.VerifyInt("назву бригади");
+                            person.Brigade = Validation.VerifyInt("назву бригади");
                             break;
                         case 17:
-                            p.Period = Validation.VerifyString("період служби");
+                            person.Period = Validation.VerifyString("період служби");
                             break;
                         case 18:
-                            p.AboutSoldier = Validation.VerifyString("характеристику");
+                            person.AboutSoldier = Validation.VerifyString("характеристику");
                             break;
                         case 19:
                             Console.Clear();
@@ -148,45 +163,88 @@ public class Solution
                             break;
                     }
                 }
-
-                _storage.list.Add(p);
+                _storage.list.Add(generateID(person));
                 SaveData();
             }
         }
     }
 
-
-    public void GetDetailedInfo()
+    public void NewReport()
     {
-        if (MayPrintId())
+        var choise = Validation.VerifyInt("що треба зберігти\n"+
+            "1.Увесь список військовослужбовців\n" +
+            "2.Одного військовослужбовця\n" +
+            "3.Пошук по критеріям\n" +
+            "4.Відсортуваний список по бригадам");
+        switch(choise)
         {
-            Console.WriteLine();
+            case 1:
+                PrintAll(true);
+                break;
+            case 2:
+                GetDetailedInfo(true);
+                break;
+            case 3:
+                SearchBy(true);
+                break;
+            case 4:
+                SortByBrigade(true);
+                break;
+        };
+    }
+    
+    
+    public void GetDetailedInfo(bool save = false)
+    {
+        
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("Шукати військовослужбовця за:\n1.За прізвищем\n2.За ID номером");
 
-            Console.WriteLine("Введіть останні цифри з  ID-номеру військовослужбовця");
-            var p = PersonById(Validation.VerifyInt());
-            if (p != null)
+        var choise = Validation.VerifyInt();
+        List<Person>? persons = choise switch
+        {
+            1 => personBySurname(Validation.VerifyString("прізвище військовослужбовця")),
+            2 => isListNotEmpty() ? personById(Validation.VerifyInt("останні цифри з  ID-номеру військовослужбовця")) : null,
+            _ => null,
+        };
+        if (persons != null)
+        {
+            foreach (var p in persons)
             {
                 string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
                 Console.WriteLine(
                     $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nФорма служби: {p.FormOfService}\nТермін служби: {p.Period}\nДата отримання звання: {p.DateRank}\nID:{p.Id}\nПозиція: {p.Position}\nОсвіта: {p.Education}\n\nХарактеристика: {p.AboutSoldier}\n\nІм'я та прізвище батька - {p.fNameSurname}\nМісце проживання - {p.fAdress}\nІм'я та прізвище матері - {p.mNameSurname}\nМісце проживання - {p.mAdress}\nЦивільна професія - {p.civilProfession}\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригадм");
-                SaveToFile(null,p);
+            }
+
+            if (save)
+            {
+                saveToFile(persons);
             }
         }
-    }
-
-    private Person PersonById(int lineId)
-    {
-        var person = _storage.list.Where(x => x.IdNum == lineId).ToList();
-        if (person.Count > 0)
+        else
         {
-            return person[0];
+            Console.WriteLine("Такої команди не існує");
         }
-
-        Console.WriteLine("Невірний ID-номер");
-        return null;
     }
 
-    private bool MayPrintId()
+    private List<Person> personById(int lineId)
+    {
+        return _storage.list.Where(x => x.IdNum == lineId).ToList();;
+    }
+
+    private List<Person> personBySurname(string surname)
+    {
+        var person = _storage.list.Where(x => x.Surname == surname.ToUpper()).ToList();
+        if (person == null)
+        {
+            Console.WriteLine("Невірний ID-номер");
+            return null;
+        }
+        return person;
+    }
+
+    private bool isListNotEmpty()
     {
         if (_storage.list.Count != 0)
         {
@@ -203,7 +261,7 @@ public class Solution
 
     }
 
-    public void PrintAll()
+    public void PrintAll(bool save = false)
     {
         if (_storage.list.Count != 0)
         {
@@ -221,7 +279,10 @@ public class Solution
             }
 
             Console.WriteLine();
-            SaveToFile(_storage.list);
+            if (save)
+            {
+                saveToFile(_storage.list);
+            }
         }
         else
         {
@@ -235,9 +296,9 @@ public class Solution
     {
         if (_storage.list.Count != 0)
         {
-            Console.WriteLine("Введіть останні цифри з ID-номеру військовослужбовця для його видалення з реєстру:");
-            MayPrintId();
-            var p = PersonById(Validation.VerifyInt());
+            Console.WriteLine();
+            isListNotEmpty();
+            var p = personById(Validation.VerifyInt("останні цифри з ID-номеру військовослужбовця для його видалення з реєстру:"));
             if (p != null)
             {
                 int position = Array.IndexOf(_storage.list.ToArray(), p);
@@ -252,13 +313,13 @@ public class Solution
         }
     }
 
-    public void SortByBrigade()
+    public void SortByBrigade(bool save = false)
     {
         var tempStorage = _storage.list;
-        SortedPrint(tempStorage.OrderBy(x => x.Brigade).ThenBy(x => x.Battalion).ThenBy(x => x.Unit).ToList());
+        sortedPrint(tempStorage.OrderBy(x => x.Brigade).ThenBy(x => x.Battalion).ThenBy(x => x.Unit).ToList(),save);
     }
 
-    public void SearchBy()
+    public void SearchBy(bool save = false)
     {
         var tempStorage = _storage.list;
         Console.WriteLine(
@@ -268,33 +329,32 @@ public class Solution
         {
             case 1:
                 int t_brigade = Validation.VerifyInt("бригаду");
-                SortedPrint(tempStorage.Where(x => x.Brigade == t_brigade).ToList());
+                sortedPrint(tempStorage.Where(x => x.Brigade == t_brigade).ToList(),save);
                 break;
             case 2:
                 t_brigade = Validation.VerifyInt("бригаду");
                 int t_Battalion = Validation.VerifyInt("батальйон");
-                SortedPrint(tempStorage.Where(x => x.Brigade == t_brigade).Where(x => x.Battalion == t_Battalion)
-                    .ToList()
-                );
+                sortedPrint(tempStorage.Where(x => x.Brigade == t_brigade).Where(x => x.Battalion == t_Battalion)
+                    .ToList(),save);
                 break;
             case 3:
                 t_brigade = Validation.VerifyInt("бригаду");
                 t_Battalion = Validation.VerifyInt("батальйон");
                 int t_Unit = Validation.VerifyInt("роту");
-                SortedPrint(tempStorage.Where(x => x.Brigade == t_brigade).Where(x => x.Battalion == t_Battalion)
-                    .Where(x => x.Unit == t_Unit).ToList());
+                sortedPrint(tempStorage.Where(x => x.Brigade == t_brigade).Where(x => x.Battalion == t_Battalion)
+                    .Where(x => x.Unit == t_Unit).ToList(),save);
                 break;
             case 4:
-                SortedPrint(tempStorage.Where(x => Array.IndexOf(Validation.GetRankArr(), x.Rank) > 10)
-                    .ToList());
+                sortedPrint(tempStorage.Where(x => Array.IndexOf(Validation.GetRankArr(), x.Rank) > 10)
+                    .ToList(),save);
                 break;
             case 5:
-                SortedPrint(tempStorage.Where(x =>
+                sortedPrint(tempStorage.Where(x =>
                     Array.IndexOf(Validation.GetRankArr(), x.Rank) < 10 &&
-                    Array.IndexOf(Validation.GetRankArr(), x.Rank) > 2).ToList());
+                    Array.IndexOf(Validation.GetRankArr(), x.Rank) > 2).ToList(),save);
                 break;
             case 6:
-                SortedPrint(tempStorage.Where(x => Array.IndexOf(Validation.GetRankArr(), x.Rank) < 3).ToList());
+                sortedPrint(tempStorage.Where(x => Array.IndexOf(Validation.GetRankArr(), x.Rank) < 3).ToList(),save);
                 break;
             default:
                 Console.WriteLine("Немає такої команди");
@@ -302,7 +362,7 @@ public class Solution
         }
     }
 
-    private void SortedPrint(List<Person> squad)
+    private void sortedPrint(List<Person> squad, bool save = false)
     {
         if (squad.Count != 0)
         {
@@ -320,7 +380,10 @@ public class Solution
             }
 
             Console.WriteLine();
-            SaveToFile(squad);
+            if (save)
+            {
+                saveToFile(squad);
+            }
         }
         else
         {
@@ -330,33 +393,15 @@ public class Solution
         }
     }
 
-    private void SaveToFile(List<Person> persons = null, Person person = null)
+    private void saveToFile(List<Person> persons = null, Person person = null)
     {
-        bool IsInputCorrect = false;
-        while (IsInputCorrect == false)
+        if (persons != null && persons.Count == 0)
         {
-
-            Console.WriteLine("Чи бажаєте зберігти список у файл?");
-            Console.WriteLine("1.Так\n2.Ні\n");
-            switch (Validation.VerifyInt())
-            {
-                case 1:
-                    IsInputCorrect = true;
-                    break;
-                case 2:
-                    return;
-                default:
-                    Console.WriteLine("Такої відповіді немає");
-                    return;
-            }
+            return;
         }
-
-        if (persons != null)
+        if (person != null && persons == null)
         {
-            if (persons.Count == 0)
-            {
-                return;
-            }
+            return;
         }
         Console.Clear();
         string document = "";
