@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using Newtonsoft.Json;
-namespace CourseWork;
+namespace SOTNYK;
 
 public class Solution
 {
@@ -22,30 +22,68 @@ public class Solution
     {
         Person? _person = new();
         _person.Name = Validation.VerifyString("ім'я");
+        Console.WriteLine();
+        
         _person.Surname = Validation.VerifyString("прізвище");
+        Console.WriteLine();
+
         _person.Age = Validation.VerifyInt("вік");
+        Console.WriteLine();
+        
         _person.Rank = Validation.VerifyRank("звання");
+        Console.WriteLine();
+        
         _person.DateRank = Validation.VerifyString("дату отримання звання");
+        Console.WriteLine();
+        
         _person.FormOfService = Validation.VerifyString("форму служби");
+        Console.WriteLine();
+        
         _person.mNameSurname = Validation.VerifyString("ім'я та прізвище матері");
+        Console.WriteLine();
+        
         _person.mAdress = Validation.VerifyString("адресу проживання матері");
+        Console.WriteLine();
+        
         _person.fNameSurname = Validation.VerifyString("ім'я та прізвище батька");
+        Console.WriteLine();
+        
         _person.fAdress = Validation.VerifyString("адресу проживання батька");
+        Console.WriteLine();
+        
         _person.civilProfession = Validation.VerifyString("цивільну професію військовослужбовця");
+        Console.WriteLine();
+        
         _person.Education = Validation.VerifyString("заклад освіти");
+        
+        Console.WriteLine();
         _person.Position = Validation.VerifyString("позицію");
+        
+        Console.WriteLine();
         _person.Unit = Validation.VerifyInt("номер роти");
+        
+        Console.WriteLine();
         _person.Battalion = Validation.VerifyInt("номер батальйону");
+        
+        Console.WriteLine();
         _person.Brigade = Validation.VerifyInt("номер бригади");
+        
+        Console.WriteLine();
         _person.Period = Validation.VerifyString("період служби");
+        
+        Console.WriteLine();
         _person.AboutSoldier = Validation.VerifyString("характеристику");
+
+        Console.Clear();
+        generateID(_person);
+        printDetailedInfo(null,_person);
         while (true)
         {
-            Console.WriteLine("Дані введені вірно?");
-            switch (Validation.VerifyInt(":\n1.Так\n2.Ні\n"))
+            Console.WriteLine("Дані введені вірно?\n1.Так\n2.Ні\n");
+            switch (Validation.VerifyInt())
             {
                 case 1:
-                    _storage.list.Add(generateID(_person));
+                    _storage.list.Add(_person);
                     SaveData();
                     return;
                 case 2:
@@ -73,7 +111,7 @@ public class Solution
         {
             Console.WriteLine();
 
-            var person = personById(Validation.VerifyInt("останні цифри з  ID-номеру військовослужбовця")).FirstOrDefault();
+            var person = personById(Validation.VerifyInt("останні цифри з ID-номеру військовослужбовця")).FirstOrDefault();
             if (person != null)
             {
                 _storage.list.RemoveAt(_storage.list.IndexOf(person));
@@ -173,7 +211,7 @@ public class Solution
     {
         var choise = Validation.VerifyInt("що треба зберігти\n"+
             "1.Увесь список військовослужбовців\n" +
-            "2.Одного військовослужбовця\n" +
+            "2.Інформацію про одного військовослужбовця\n" +
             "3.Пошук по критеріям\n" +
             "4.Відсортуваний список по бригадам");
         switch(choise)
@@ -199,7 +237,7 @@ public class Solution
         
         Console.WriteLine();
         Console.WriteLine();
-        Console.WriteLine("Шукати військовослужбовця за:\n1.За прізвищем\n2.За ID номером");
+        Console.WriteLine("Шукати військовослужбовця :\n\n1.За прізвищем\n2.За ID номером");
 
         var choise = Validation.VerifyInt();
         List<Person>? persons = choise switch
@@ -210,13 +248,8 @@ public class Solution
         };
         if (persons != null)
         {
-            foreach (var p in persons)
-            {
-                string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
-                Console.WriteLine(
-                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nФорма служби: {p.FormOfService}\nТермін служби: {p.Period}\nДата отримання звання: {p.DateRank}\nID:{p.Id}\nПозиція: {p.Position}\nОсвіта: {p.Education}\n\nХарактеристика: {p.AboutSoldier}\n\nІм'я та прізвище батька - {p.fNameSurname}\nМісце проживання - {p.fAdress}\nІм'я та прізвище матері - {p.mNameSurname}\nМісце проживання - {p.mAdress}\nЦивільна професія - {p.civilProfession}\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригадм");
-            }
-
+            printDetailedInfo(persons);
+            
             if (save)
             {
                 saveToFile(persons);
@@ -228,6 +261,30 @@ public class Solution
         }
     }
 
+    private void printDetailedInfo(List<Person> persons = null,Person person = null)
+    {
+        if ((persons == null && person == null) || (person != null && persons != null))
+        {
+            return;
+        }
+
+        if (persons != null)
+        {
+            foreach (var p in persons)
+            {
+                string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
+                Console.WriteLine(
+                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nФорма служби: {p.FormOfService}\nТермін служби: {p.Period}\nДата отримання звання: {p.DateRank}\nID:{p.Id}\nПозиція: {p.Position}\nОсвіта: {p.Education}\n\nХарактеристика: {p.AboutSoldier}\n\nІм'я та прізвище батька - {p.fNameSurname}\nМісце проживання - {p.fAdress}\nІм'я та прізвище матері - {p.mNameSurname}\nМісце проживання - {p.mAdress}\nЦивільна професія - {p.civilProfession}\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригадм");
+            }
+        }
+        else
+        {
+            string age = person.Age % 10 == 0 || person.Age % 10 >= 5 ? "років" : "роки";
+            Console.WriteLine(
+                $"{person.Rank} {person.Name} {person.Surname} - {person.Age} {age}.\nФорма служби: {person.FormOfService}\nТермін служби: {person.Period}\nДата отримання звання: {person.DateRank}\nID:{person.Id}\nПозиція: {person.Position}\nОсвіта: {person.Education}\n\nХарактеристика: {person.AboutSoldier}\n\nІм'я та прізвище батька - {person.fNameSurname}\nМісце проживання - {person.fAdress}\nІм'я та прізвище матері - {person.mNameSurname}\nМісце проживання - {person.mAdress}\nЦивільна професія - {person.civilProfession}\n{person.Unit} рота {person.Battalion} батальйону {person.Brigade} бригадм");
+
+        }
+    }
     private List<Person> personById(int lineId)
     {
         return _storage.list.Where(x => x.IdNum == lineId).ToList();;
@@ -296,15 +353,20 @@ public class Solution
     {
         if (_storage.list.Count != 0)
         {
-            Console.WriteLine();
             isListNotEmpty();
-            var p = personById(Validation.VerifyInt("останні цифри з ID-номеру військовослужбовця для його видалення з реєстру:"));
+            Console.WriteLine();
+            Console.WriteLine();
+            var p = personById(Validation.VerifyInt("останні цифри з ID-номеру військовослужбовця для його видалення з реєстру:")).FirstOrDefault();
             if (p != null)
             {
                 int position = Array.IndexOf(_storage.list.ToArray(), p);
                 _storage.list.RemoveAt(position);
                 SaveData();
-                PrintAll();
+                Console.WriteLine("Військовослужбовець успішно видалений з бази даних.");
+            }
+            else
+            {
+                Console.WriteLine("Такого військовослужбовця наразі немає в базі данних.");
             }
         }
         else
@@ -323,7 +385,7 @@ public class Solution
     {
         var tempStorage = _storage.list;
         Console.WriteLine(
-            "Шукати:\n1.За бригадою \n2.За бригадою та батальйоном \n3.За бригадою, батальйоном та ротою \n4.Офіцерський склад\n5.Сержантський і старшинський склад\n6.Рsядовий склад");
+            "Шукати:\n1.За бригадою \n2.За бригадою та батальйоном \n3.За бригадою, батальйоном та ротою \n4.Офіцерський склад\n5.Сержантський і старшинський склад\n6.Рядовий склад");
         int choise = Validation.VerifyInt();
         switch (choise)
         {

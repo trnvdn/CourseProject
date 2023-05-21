@@ -1,4 +1,4 @@
-﻿namespace CourseWork;
+﻿namespace SOTNYK;
 
 public class Person
 {

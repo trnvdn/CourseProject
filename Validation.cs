@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace CourseWork;
+namespace SOTNYK;
 
 public static class Validation
 {

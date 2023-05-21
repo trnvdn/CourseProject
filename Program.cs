@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 
-namespace CourseWork;
+namespace SOTNYK;
 
 internal class Program
 {
@@ -17,10 +17,8 @@ internal class Program
         
         while (appContext)
         {
-            Console.WriteLine(
-                );
             switch (Validation.VerifyInt(
-                        "Введіть код операції:\n" +
+                        "код операції:\n" +
                         "1. Додати людину\n" +
                         "2. Видалити людину\n" +
                         "3. Вивести список особистого складу\n" + 
@@ -29,7 +27,7 @@ internal class Program
                         "6. Пошук за критеріями\n" +
                         "7. Редагувати дані про військовослужбовця\n" +
                         "8. Створити та зберігти звіт\n" +
-                        "9. Вийти"))
+                        "9. Вийти\n\n"))
             {
                 case 1:
                     Console.Clear();
@@ -71,6 +69,9 @@ internal class Program
                     Console.WriteLine("Такої команди не було створено");
                     break;
             }
+
+            Console.WriteLine();
+            Console.WriteLine();
         }
     }
 }
