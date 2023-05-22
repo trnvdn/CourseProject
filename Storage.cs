@@ -3,5 +3,5 @@ namespace SOTNYK;
 
 public class Storage
 {
-    public List<Person> list = new();
+    public List<Person> List = new();
 }

@@ -83,7 +83,7 @@ public class Solution
             switch (Validation.VerifyInt())
             {
                 case 1:
-                    _storage.list.Add(_person);
+                    _storage.List.Add(_person);
                     SaveData();
                     return;
                 case 2:
@@ -96,15 +96,91 @@ public class Solution
         }
     }
 
-    private Person generateID(Person person)
+    public void DeleteAt()
     {
-        Random rnd = new Random();
-        person.IdNum = rnd.Next(100000, 250000);
-        person.Id = "UA" + "-" + string.Join("", person.Rank.Select(x => x.ToString().ToUpper()).ToArray()) + "-" +
-                    person.Surname[0] + person.Name[0] + "-" + person.IdNum;
-        return person;
+        if (_storage.List.Count != 0)
+        {
+            isListNotEmpty();
+            Console.WriteLine();
+            Console.WriteLine();
+            var p = personById(Validation.VerifyInt("останні цифри з ID-номеру військовослужбовця для його видалення з реєстру:")).FirstOrDefault();
+            if (p != null)
+            {
+                int position = Array.IndexOf(_storage.List.ToArray(), p);
+                _storage.List.RemoveAt(position);
+                SaveData();
+                Console.WriteLine("Військовослужбовець успішно видалений з бази даних.");
+            }
+            else
+            {
+                Console.WriteLine("Такого військовослужбовця наразі немає в базі данних.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Зараз немає наявної інформації!");
+        }
     }
-    
+    public void PrintAll(bool save = false)
+    {
+        if (_storage.List.Count != 0)
+        {
+            Console.WriteLine();
+
+            foreach (var p in _storage.List)
+            {
+                string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
+                Console.WriteLine();
+                Console.WriteLine("————————————————————————————————————");
+                Console.WriteLine(
+                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nID:{p.Id}\nПозиція: {p.Position}\n\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригади");
+                Console.WriteLine("————————————————————————————————————");
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+            if (save)
+            {
+                saveToFile(_storage.List);
+            }
+        }
+        else
+        {
+            Console.WriteLine();
+            Console.WriteLine("Зараз немає наявної інформації!");
+            Console.WriteLine();
+        }
+    }
+
+    public void GetDetailedInfo(bool save = false)
+    {
+
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("Шукати військовослужбовця :\n\n1.За прізвищем\n2.За ID номером");
+
+        var choise = Validation.VerifyInt();
+        List<Person>? persons = choise switch
+        {
+            1 => personBySurname(Validation.VerifyString("прізвище військовослужбовця")),
+            2 => isListNotEmpty() ? personById(Validation.VerifyInt("останні цифри з  ID-номеру військовослужбовця")) : null,
+            _ => null,
+        };
+        if (persons != null)
+        {
+            printDetailedInfo(persons);
+
+            if (save)
+            {
+                saveToFile(persons);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Такої команди не існує");
+        }
+    }
+
     public void Refactsoldier()
     {
         if (isListNotEmpty())
@@ -114,7 +190,7 @@ public class Solution
             var person = personById(Validation.VerifyInt("останні цифри з ID-номеру військовослужбовця")).FirstOrDefault();
             if (person != null)
             {
-                _storage.list.RemoveAt(_storage.list.IndexOf(person));
+                _storage.List.RemoveAt(_storage.List.IndexOf(person));
                 bool InProcess = true;
                 while (InProcess)
                 {
@@ -201,189 +277,21 @@ public class Solution
                             break;
                     }
                 }
-                _storage.list.Add(generateID(person));
+                _storage.List.Add(generateID(person));
                 SaveData();
             }
-        }
-    }
-
-    public void NewReport()
-    {
-        var choise = Validation.VerifyInt("що треба зберігти\n"+
-            "1.Увесь список військовослужбовців\n" +
-            "2.Інформацію про одного військовослужбовця\n" +
-            "3.Пошук по критеріям\n" +
-            "4.Відсортуваний список по бригадам");
-        switch(choise)
-        {
-            case 1:
-                PrintAll(true);
-                break;
-            case 2:
-                GetDetailedInfo(true);
-                break;
-            case 3:
-                SearchBy(true);
-                break;
-            case 4:
-                SortByBrigade(true);
-                break;
-        };
-    }
-    
-    
-    public void GetDetailedInfo(bool save = false)
-    {
-        
-        Console.WriteLine();
-        Console.WriteLine();
-        Console.WriteLine("Шукати військовослужбовця :\n\n1.За прізвищем\n2.За ID номером");
-
-        var choise = Validation.VerifyInt();
-        List<Person>? persons = choise switch
-        {
-            1 => personBySurname(Validation.VerifyString("прізвище військовослужбовця")),
-            2 => isListNotEmpty() ? personById(Validation.VerifyInt("останні цифри з  ID-номеру військовослужбовця")) : null,
-            _ => null,
-        };
-        if (persons != null)
-        {
-            printDetailedInfo(persons);
-            
-            if (save)
-            {
-                saveToFile(persons);
-            }
-        }
-        else
-        {
-            Console.WriteLine("Такої команди не існує");
-        }
-    }
-
-    private void printDetailedInfo(List<Person> persons = null,Person person = null)
-    {
-        if ((persons == null && person == null) || (person != null && persons != null))
-        {
-            return;
-        }
-
-        if (persons != null)
-        {
-            foreach (var p in persons)
-            {
-                string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
-                Console.WriteLine(
-                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nФорма служби: {p.FormOfService}\nТермін служби: {p.Period}\nДата отримання звання: {p.DateRank}\nID:{p.Id}\nПозиція: {p.Position}\nОсвіта: {p.Education}\n\nХарактеристика: {p.AboutSoldier}\n\nІм'я та прізвище батька - {p.fNameSurname}\nМісце проживання - {p.fAdress}\nІм'я та прізвище матері - {p.mNameSurname}\nМісце проживання - {p.mAdress}\nЦивільна професія - {p.civilProfession}\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригадм");
-            }
-        }
-        else
-        {
-            string age = person.Age % 10 == 0 || person.Age % 10 >= 5 ? "років" : "роки";
-            Console.WriteLine(
-                $"{person.Rank} {person.Name} {person.Surname} - {person.Age} {age}.\nФорма служби: {person.FormOfService}\nТермін служби: {person.Period}\nДата отримання звання: {person.DateRank}\nID:{person.Id}\nПозиція: {person.Position}\nОсвіта: {person.Education}\n\nХарактеристика: {person.AboutSoldier}\n\nІм'я та прізвище батька - {person.fNameSurname}\nМісце проживання - {person.fAdress}\nІм'я та прізвище матері - {person.mNameSurname}\nМісце проживання - {person.mAdress}\nЦивільна професія - {person.civilProfession}\n{person.Unit} рота {person.Battalion} батальйону {person.Brigade} бригадм");
-
-        }
-    }
-    private List<Person> personById(int lineId)
-    {
-        return _storage.list.Where(x => x.IdNum == lineId).ToList();;
-    }
-
-    private List<Person> personBySurname(string surname)
-    {
-        var person = _storage.list.Where(x => x.Surname == surname.ToUpper()).ToList();
-        if (person == null)
-        {
-            Console.WriteLine("Невірний ID-номер");
-            return null;
-        }
-        return person;
-    }
-
-    private bool isListNotEmpty()
-    {
-        if (_storage.list.Count != 0)
-        {
-            foreach (var p in _storage.list)
-            {
-                Console.WriteLine($"{p.Name} {p.Surname} - {p.Id}");
-            }
-
-            return true;
-        }
-
-        Console.WriteLine("Інформація про військовослужбовців в реєстрі відсутня");
-        return false;
-
-    }
-
-    public void PrintAll(bool save = false)
-    {
-        if (_storage.list.Count != 0)
-        {
-            Console.WriteLine();
-
-            foreach (var p in _storage.list)
-            {
-                string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
-                Console.WriteLine();
-                Console.WriteLine("————————————————————————————————————");
-                Console.WriteLine(
-                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nID:{p.Id}\nПозиція: {p.Position}\n\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригади");
-                Console.WriteLine("————————————————————————————————————");
-                Console.WriteLine();
-            }
-
-            Console.WriteLine();
-            if (save)
-            {
-                saveToFile(_storage.list);
-            }
-        }
-        else
-        {
-            Console.WriteLine();
-            Console.WriteLine("Зараз немає наявної інформації!");
-            Console.WriteLine();
-        }
-    }
-
-    public void DeleteAt()
-    {
-        if (_storage.list.Count != 0)
-        {
-            isListNotEmpty();
-            Console.WriteLine();
-            Console.WriteLine();
-            var p = personById(Validation.VerifyInt("останні цифри з ID-номеру військовослужбовця для його видалення з реєстру:")).FirstOrDefault();
-            if (p != null)
-            {
-                int position = Array.IndexOf(_storage.list.ToArray(), p);
-                _storage.list.RemoveAt(position);
-                SaveData();
-                Console.WriteLine("Військовослужбовець успішно видалений з бази даних.");
-            }
-            else
-            {
-                Console.WriteLine("Такого військовослужбовця наразі немає в базі данних.");
-            }
-        }
-        else
-        {
-            Console.WriteLine("Зараз немає наявної інформації!");
         }
     }
 
     public void SortByBrigade(bool save = false)
     {
-        var tempStorage = _storage.list;
+        var tempStorage = _storage.List;
         sortedPrint(tempStorage.OrderBy(x => x.Brigade).ThenBy(x => x.Battalion).ThenBy(x => x.Unit).ToList(),save);
     }
 
     public void SearchBy(bool save = false)
     {
-        var tempStorage = _storage.list;
+        var tempStorage = _storage.List;
         Console.WriteLine(
             "Шукати:\n1.За бригадою \n2.За бригадою та батальйоном \n3.За бригадою, батальйоном та ротою \n4.Офіцерський склад\n5.Сержантський і старшинський склад\n6.Рядовий склад");
         int choise = Validation.VerifyInt();
@@ -423,7 +331,46 @@ public class Solution
                 return;
         }
     }
+    public void NewReport()
+    {
+        var choise = Validation.VerifyInt("що треба зберігти\n" +
+            "1.Увесь список військовослужбовців\n" +
+            "2.Інформацію про одного військовослужбовця\n" +
+            "3.Пошук по критеріям\n" +
+            "4.Відсортуваний список по бригадам");
+        switch (choise)
+        {
+            case 1:
+                PrintAll(true);
+                break;
+            case 2:
+                GetDetailedInfo(true);
+                break;
+            case 3:
+                SearchBy(true);
+                break;
+            case 4:
+                SortByBrigade(true);
+                break;
+        };
+    }
 
+    private bool isListNotEmpty()
+    {
+        if (_storage.List.Count != 0)
+        {
+            foreach (var p in _storage.List)
+            {
+                Console.WriteLine($"{p.Name} {p.Surname} - {p.Id}");
+            }
+
+            return true;
+        }
+
+        Console.WriteLine("Інформація про військовослужбовців в реєстрі відсутня");
+        return false;
+
+    }
     private void sortedPrint(List<Person> squad, bool save = false)
     {
         if (squad.Count != 0)
@@ -454,7 +401,54 @@ public class Solution
             Console.WriteLine();
         }
     }
+    private void printDetailedInfo(List<Person> persons = null, Person person = null)
+    {
+        if ((persons == null && person == null) || (person != null && persons != null))
+        {
+            return;
+        }
 
+        if (persons != null)
+        {
+            foreach (var p in persons)
+            {
+                string age = p.Age % 10 == 0 || p.Age % 10 >= 5 ? "років" : "роки";
+                Console.WriteLine(
+                    $"{p.Rank} {p.Name} {p.Surname} - {p.Age} {age}.\nФорма служби: {p.FormOfService}\nТермін служби: {p.Period}\nДата отримання звання: {p.DateRank}\nID:{p.Id}\nПозиція: {p.Position}\nОсвіта: {p.Education}\n\nХарактеристика: {p.AboutSoldier}\n\nІм'я та прізвище батька - {p.fNameSurname}\nМісце проживання - {p.fAdress}\nІм'я та прізвище матері - {p.mNameSurname}\nМісце проживання - {p.mAdress}\nЦивільна професія - {p.civilProfession}\n{p.Unit} рота {p.Battalion} батальйону {p.Brigade} бригадм");
+            }
+        }
+        else
+        {
+            string age = person.Age % 10 == 0 || person.Age % 10 >= 5 ? "років" : "роки";
+            Console.WriteLine(
+                $"{person.Rank} {person.Name} {person.Surname} - {person.Age} {age}.\nФорма служби: {person.FormOfService}\nТермін служби: {person.Period}\nДата отримання звання: {person.DateRank}\nID:{person.Id}\nПозиція: {person.Position}\nОсвіта: {person.Education}\n\nХарактеристика: {person.AboutSoldier}\n\nІм'я та прізвище батька - {person.fNameSurname}\nМісце проживання - {person.fAdress}\nІм'я та прізвище матері - {person.mNameSurname}\nМісце проживання - {person.mAdress}\nЦивільна професія - {person.civilProfession}\n{person.Unit} рота {person.Battalion} батальйону {person.Brigade} бригадм");
+
+        }
+    }
+
+    private Person generateID(Person person)
+    {
+        Random rnd = new Random();
+        person.IdNum = rnd.Next(100000, 250000);
+        person.Id = "UA" + "-" + string.Join("", person.Rank.Select(x => x.ToString().ToUpper()).ToArray()) + "-" +
+                    person.Surname[0] + person.Name[0] + "-" + person.IdNum;
+        return person;
+    }
+    private List<Person> personById(int lineId)
+    {
+        return _storage.List.Where(x => x.IdNum == lineId).ToList(); ;
+    }
+
+    private List<Person> personBySurname(string surname)
+    {
+        var person = _storage.List.Where(x => x.Surname == surname.ToUpper()).ToList();
+        if (person == null)
+        {
+            Console.WriteLine("Невірний ID-номер");
+            return null;
+        }
+        return person;
+    }
     private void saveToFile(List<Person> persons = null, Person person = null)
     {
         if (persons != null && persons.Count == 0)
